@@ -47,6 +47,7 @@ class MrT
         Curses.addstr(str.join)
         @screen.refresh
         c = Curses.getch
+        c = c.ord if c.respond_to?(:ord)
         case c
         when 27 # ESCAPE
           throw :done
