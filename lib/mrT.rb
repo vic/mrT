@@ -109,7 +109,7 @@ class MrT
     Curses.setpos(row(index) , 0)
     @screen.clrtoeol
     Curses.standout if standout
-    Curses.addstr @matches[index]
+    Curses.addstr @matches[index] unless @matches[index].nil?
     Curses.standend if standout
   end
 
