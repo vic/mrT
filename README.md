@@ -53,5 +53,6 @@ to the github repository:
 Authors
 -------
 
-[Victor Hugo Borja](http://github.com/vic) <vic.borja@gmail.com>
-[Eduardo Lopez](http://github.com/tapichu)
+- [Victor Hugo Borja](http://github.com/vic) <vic.borja@gmail.com>
+
+- [Eduardo Lopez](http://github.com/tapichu)
