@@ -17,7 +17,7 @@ Requirements
 
 Mr T requires a ruby compiled with the standard curses library (you need to have
 curses-devel installed at ruby configuration time), it also makes use of the ruby 
-extension provided by [Command-T][http://wincent.com/products/command-t]
+extension provided by [Command-T](http://wincent.com/products/command-t)
 
 
 Installation
@@ -53,6 +53,5 @@ to the github repository:
 Authors
 -------
 
-Victor Hugo Borja <vic.borja@gmail.com>
-
-
+[Victor Hugo Borja](http://github.com/vic) <vic.borja@gmail.com>
+[Eduardo Lopez](http://github.com/tapichu)
