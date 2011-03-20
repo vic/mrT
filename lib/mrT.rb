@@ -3,19 +3,19 @@ require 'command-t/finder'
 
 class MrT
 
-  attr_reader :str, :shown_from, :pwd
+  attr_reader :str, :shown_from, :dir
 
-  def initialize(pwd)
+  def initialize(dir)
     @str = []
     @options = {
     }
-    @pwd = pwd
-    @finder = CommandT::Finder.new @pwd, @options
+    @dir = dir
+    @finder = CommandT::Finder.new @dir, @options
   end
 
   def run
     value = with_curses { interact }
-    File.expand_path(value, @pwd) if value
+    File.expand_path(value, @dir) if value
   end
 
   def with_curses
