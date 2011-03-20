@@ -29,7 +29,7 @@ class MrT
     @screen.keypad true
 
     begin
-      value = yield
+      yield
     rescue Interrupt
       Curses.close_screen
     ensure
@@ -40,7 +40,7 @@ class MrT
   def interact
     catch :done do
       filter
-      while true
+      loop do
         Curses.setpos(0,0)
         @screen.clrtoeol
         Curses.addstr('>> ')
