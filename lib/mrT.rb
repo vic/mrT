@@ -1,4 +1,5 @@
 require 'curses'
+require 'yaml'
 require 'command-t/finder'
 
 class MrT
@@ -6,11 +7,26 @@ class MrT
   attr_reader :str, :shown_from, :dir
 
   def initialize(dir)
+    load_config
     @str = []
     @options = {
+      :max_depth => @config['max_depth'],
+      :max_files => @config['max_files'],
+      :scan_dot_directories => @config['scan_dot_directories'] == true,
+      :always_show_dot_files => @config['show_dot_files'] == true,
+      :never_show_dot_files => @config['show_dot_files'] == false
     }
     @dir = dir
     @finder = CommandT::Finder.new @dir, @options
+  end
+
+  def load_config
+    @config = {}
+    config_file = File.expand_path('~/.mrTrc')
+    if File.exist? config_file
+      config = YAML.load_file(config_file)
+      @config = config unless config == false
+    end
   end
 
   def run
