@@ -4,8 +4,6 @@ require 'command-t/finder'
 
 class MrT
 
-  attr_reader :str, :shown_from, :dir
-
   @@defaults = {
     :max_depth => 15,
     :max_files => 10_000,
@@ -19,6 +17,15 @@ class MrT
     @finder = CommandT::Finder.new @dir, @config
   end
 
+  def run
+    value = with_curses { interact }
+    File.expand_path(value, dir) if value
+  end
+
+  private
+
+  attr_reader :str, :shown_from, :dir
+
   def load_config
     config = {}
     config_file = File.expand_path('~/.mrTrc')
@@ -30,11 +37,6 @@ class MrT
       m[:never_show_dot_files] =
         !(m[:always_show_dot_files] = !!m.delete(:show_dot_files))
     }
-  end
-
-  def run
-    value = with_curses { interact }
-    File.expand_path(value, @dir) if value
   end
 
   def with_curses
