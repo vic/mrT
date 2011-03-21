@@ -6,27 +6,30 @@ class MrT
 
   attr_reader :str, :shown_from, :dir
 
+  @@defaults = {
+    :max_depth => 15,
+    :max_files => 10_000,
+    :scan_dot_directories => false,
+    :show_dot_files => false
+  }
+
   def initialize(dir)
-    load_config
     @str = []
-    @options = {
-      :max_depth => @config['max_depth'],
-      :max_files => @config['max_files'],
-      :scan_dot_directories => @config['scan_dot_directories'] == true,
-      :always_show_dot_files => @config['show_dot_files'] == true,
-      :never_show_dot_files => @config['show_dot_files'] == false
-    }
-    @dir = dir
-    @finder = CommandT::Finder.new @dir, @options
+    @dir, @config = dir, load_config
+    @finder = CommandT::Finder.new @dir, @config
   end
 
   def load_config
-    @config = {}
+    config = {}
     config_file = File.expand_path('~/.mrTrc')
-    if File.exist? config_file
-      config = YAML.load_file(config_file)
-      @config = config unless config == false
+    if File.exist?(config_file) &&
+       Hash === (cfg = YAML.load_file(config_file))
+      cfg.each_pair { |k,v| config[k.to_sym] = v }
     end
+    @@defaults.merge(config).tap { |m|
+      m[:never_show_dot_files] =
+        !(m[:always_show_dot_files] = !!m.delete(:show_dot_files))
+    }
   end
 
   def run
