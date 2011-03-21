@@ -36,6 +36,23 @@ takes an optional directory as only argument.
      mrT
 
 
+
+Configuration
+-------------
+
+A YAML file <code>~/.mrTrc</code> with a Hash content can be used for
+configuration.
+
+Default values are:
+
+<code><pre>
+max_depth: 15
+max_files: 10_000
+scan_dot_directories: false
+show_dot_files: false
+</pre></code>
+
+
 Future
 ------
 
