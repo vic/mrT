@@ -45,12 +45,22 @@ configuration.
 
 Default values are:
 
-<code><pre>
+<pre>
+# if true and no directory is specified, mrT tries to guess git project root.
+find_git_root: true
+
+# max depth of directories to find files in.
 max_depth: 15
+
+# max number of matches to display.
 max_files: 10_000
+
+# should hidden directories be scanned?
 scan_dot_directories: false
+
+# should hidden files be shown?
 show_dot_files: false
-</pre></code>
+</pre>
 
 
 Future

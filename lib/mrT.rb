@@ -8,13 +8,28 @@ class MrT
     :max_depth => 15,
     :max_files => 10_000,
     :scan_dot_directories => false,
-    :show_dot_files => false
+    :show_dot_files => false,
+    :find_git_root => true
   }
+
+  def self.config
+    unless @config
+      config = {}
+      config_file = File.expand_path('~/.mrTrc')
+      if File.exist?(config_file) &&
+          Hash === (cfg = YAML.load_file(config_file))
+        cfg.each_pair { |k,v| config[k.to_sym] = v }
+      end
+      @config = @@defaults.merge(config)
+    end
+    @config
+  end
 
   def initialize(dir)
     @str = []
-    @dir, @config = dir, load_config
-    @finder = CommandT::Finder.new @dir, @config
+    @dir = dir || default_dir
+    @options = cmd_t_options
+    @finder = CommandT::Finder.new @dir, @options
   end
 
   def run
@@ -26,14 +41,26 @@ class MrT
 
   attr_reader :str, :shown_from, :dir
 
-  def load_config
-    config = {}
-    config_file = File.expand_path('~/.mrTrc')
-    if File.exist?(config_file) &&
-       Hash === (cfg = YAML.load_file(config_file))
-      cfg.each_pair { |k,v| config[k.to_sym] = v }
+  def default_dir
+    if config[:find_git_root]
+      git_dir = `git rev-parse --git-dir 2>/dev/null`.chomp
+      if $? == 0
+        File.dirname(git_dir)
+      else
+        Dir.pwd
+      end
+    else
+      Dir.pwd
     end
-    @@defaults.merge(config).tap { |m|
+  end
+
+  def config
+    self.class.config
+  end
+
+  def cmd_t_options
+    config.merge({}).tap { |m|
+      m.delete :find_git_root
       m[:never_show_dot_files] =
         !(m[:always_show_dot_files] = !!m.delete(:show_dot_files))
     }

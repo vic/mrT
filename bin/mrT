@@ -9,7 +9,7 @@ gem 'command-t'
 
 require 'mrT'
 
-dir = Dir.pwd
+dir = nil
 dir = ARGV.first if ARGV.first && File.directory?(ARGV.first)
 res = MrT.new(dir).run
 puts res if res
