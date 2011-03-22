@@ -58,6 +58,12 @@ module MrT
       end
     end
 
+    def redraw
+      render shown_from
+      render_item(@selected, true)
+      refresh
+    end
+
     def refresh
       @screen.refresh
     end

@@ -1,6 +1,7 @@
 require 'yaml'
 require 'mrT/ui'
 require 'mrT/file_select'
+require 'mrT/action_select'
 
 module MrT
 
