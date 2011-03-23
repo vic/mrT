@@ -72,5 +72,30 @@ module MrT
       Kernel.exec 'su', 'zypper', 'install', action.target
     end if MrT.bin('zypper')
 
+    gist = lambda { |file, auth|
+      require 'cgi'
+      name = File.basename(file)
+      ext = File.extname(name)[1..-1]
+      content = CGI.escape File.read(file)
+      login = `git config github.user`.chomp
+      token = `git config github.token`.chomp
+      params = [auth && "action_button=private",
+                auth && "login=#{login}",
+                auth && "token=#{token}",
+                "file_ext[gistfile1]=#{ext}",
+                "file_name[gistfile1]=#{name}",
+                "file_contents[gistfile1]=#{content}"].compact
+      xml = `curl -d '#{params.join('&')}' https://gist.github.com/gists`
+      /a href=\"(.*?)\"/.match(xml)[1]
+    }
+
+    action :gist_public, "Create a public Gist" do |ui, action|
+      gist.call(action.target, nil)
+    end if MrT.bin('curl')
+
+    action :gist_private, "Create a private Gist" do |ui, action|
+      gist.call(action.target, true)
+    end if MrT.bin('curl')
+
   end
 end
