@@ -29,6 +29,14 @@ module MrT
       ">> "
     end
 
+    def items
+      []
+    end
+
+    def selected(ui)
+      ui.selected
+    end
+
     def matcher(options = {})
       scanner = CommandT::Scanner.new
       scanner.instance_variable_set :@paths, items

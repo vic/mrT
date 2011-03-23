@@ -58,3 +58,4 @@ end
 require 'mrT/ui'
 require 'mrT/selector'
 require 'mrT/file_select'
+require 'mrT/git_branch_select'
