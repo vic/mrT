@@ -68,7 +68,7 @@ module MrT
         when :tab
           action = action ui.dup
           if action
-            return action.execute(ui.close)
+            return action.execute(ui)
           else
             ui.redraw
           end
