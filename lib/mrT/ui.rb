@@ -1,4 +1,5 @@
 require 'curses'
+require 'readline'
 
 module MrT
 
@@ -9,6 +10,7 @@ module MrT
       353 => :shift_tab,
       13 => :enter,
       27 => :escape,
+      92 => :backslash,
       Curses::KEY_ENTER => :enter,
       Curses::KEY_BACKSPACE => :backspace
     }
@@ -21,6 +23,10 @@ module MrT
     end
 
     attr_accessor :shown_from, :items
+
+    def goto(line = 0, col = 0)
+      Curses.setpos line, col
+    end
 
     def render_line(index = 0, *text)
       Curses.setpos(index, 0)
@@ -58,6 +64,10 @@ module MrT
       end
     end
 
+    def clear
+      @screen.clear
+    end
+
     def redraw
       render shown_from
       render_item(@selected, true)
@@ -68,31 +78,69 @@ module MrT
       @screen.refresh
     end
 
-    def with_curses
+    def ungets(str)
+      str.reverse.each_char { |c| Curses.ungetch c }
+    end
+
+    def gets
+      teardown
+      Curses.getstr
+    ensure
+      setup
+    end
+
+    def readline(prompt, cloze = true, reopen = true)
+      close if cloze
+      Readline::readline(prompt, true)
+    ensure
+      if reopen
+        open; redraw
+      end
+    end
+
+    def open
       Curses.init_screen
+      @screen = Curses.stdscr
+      setup
+    end
+
+    def close
+     Curses.close_screen
+    end
+
+    def setup
       Curses.nonl
       Curses.cbreak
       Curses.noecho
-
-      @screen = Curses.stdscr
       @screen.scrollok true
       @screen.keypad true
+    end
 
+    def teardown
+      @screen.scrollok false
+      @screen.keypad false
+      Curses.echo
+      Curses.nocbreak
+      Curses.nl
+    end
+
+    def with_curses
+      open
       begin
         yield
       rescue Interrupt
-        Curses.close_screen
+        close
       ensure
-        Curses.close_screen
+        close
       end
     end
 
     def selected
-      items[selected_index]
+      items[@selected]
     end
 
     def selected_index
-      @selected
+      items.index selected
     end
 
     def shown_to
