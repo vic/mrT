@@ -4,20 +4,24 @@ Mr T
 What is it.
 -----------
 
-Mr T is a curses based file finder. If you're familiar with Textmate's cmd-t or
-Vim's Command-T plugin, you'll feel right at home. 
+MrT is a curses based file finder. If you're familiar with Textmate's cmd-t,
+Vim's [Command-T](http://wincent.com/products/command-t) plugin, or Emacs's
+[Anything](http://www.emacswiki.org/emacs/Anything), you'll feel right at home. 
 
-Mr T allows you to have fast, file completion from your shell prompt. You can 
+MrT allows you to have fast, file completion from your shell prompt. You can 
 use it as-is by invoking the _mrT_ command, or use it as your default file
 completion strategy for some unix commands.
-
 
 Requirements
 ------------
 
-Mr T requires a ruby compiled with the standard curses library (you need to have
-curses-devel installed at ruby configuration time), it also makes use of the ruby 
-extension provided by [Command-T](http://wincent.com/products/command-t)
+MrT requires ruby version 1.8.7 or greater, it has been tested with 1.9.2. 
+It requires your ruby to have been compiled with the standard _curses_ and 
+_readline_ libraries. If you are building your own ruby or are using _rvm_ 
+make sure you have needed development libraries before compiling ruby.
+
+We use the [Command-T gem](http://vic.github.com/Command-T/tree/gem), we 
+expect our changes can be integrated into Command-T's main repo.
 
 
 Installation
@@ -35,6 +39,16 @@ takes an optional directory as only argument.
 
      mrT
 
+MrT not only allows you to find files, if you hit the <code>TAB</code> key upon
+a selected file, MrT will present a set of actions to execute on it.
+
+Even though MrT was created for fast file finding from the shell prompt, it
+is not restricted to work only on files. Actually, because of MrT's addon
+design you can easily configure it to complete on anything you want.
+
+As with vim, you can use the _backslash_ key (we call it _Leader_) to change
+from one selector to another using _Leader_ + _someKey_. 
+Use _Leader_ + _space_ to show available selectors.
 
 
 Configuration
