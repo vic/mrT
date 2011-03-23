@@ -21,5 +21,9 @@ module MrT
       end
     end
 
+    action :rebase, "Rebase on top of this branch" do |ui, action|
+      Kernel.exec 'git', 'rebase', action.target
+    end
+
   end
 end if MrT.git_root
