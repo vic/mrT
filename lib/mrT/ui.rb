@@ -102,10 +102,12 @@ module MrT
       Curses.init_screen
       @screen = Curses.stdscr
       setup
+      self
     end
 
     def close
-     Curses.close_screen
+      Curses.close_screen
+      self
     end
 
     def setup
@@ -114,6 +116,7 @@ module MrT
       Curses.noecho
       @screen.scrollok true
       @screen.keypad true
+      self
     end
 
     def teardown
@@ -122,6 +125,7 @@ module MrT
       Curses.echo
       Curses.nocbreak
       Curses.nl
+      self
     end
 
     def with_curses

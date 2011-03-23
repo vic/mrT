@@ -66,7 +66,8 @@ module MrT
             return src.new.interact ui
           end
         when :tab
-          action ui
+          action = action ui.dup
+          action && action.execute(ui.close) || ui.redraw
         when (0..255)
           pattern << c.chr
           filter ui
@@ -136,8 +137,10 @@ module MrT
       end
 
       def selected(ui)
-        @actions[items.index(ui.selected)].execute(ui)
+        @actions[items.index(ui.selected)]
       end
+
+      alias_method :action, :selected
     end
   end
 
