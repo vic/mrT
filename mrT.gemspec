@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.files = files
   s.require_path = "lib"
 
-  s.executables = ["mrT"]
+  s.executables = ["mrt"]
 
   s.has_rdoc = false
   s.homepage = "http://github.com/vic/mrT"
