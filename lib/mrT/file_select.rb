@@ -1,4 +1,5 @@
 require 'command-t/finder'
+require 'mrT/command-t/scanner'
 
 module MrT
   class FileSelect
