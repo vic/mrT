@@ -15,7 +15,7 @@ module MrT
     def config
       unless @config
         config = {}
-        config_file = File.expand_path('~/.mrTrc')
+        config_file = File.expand_path('~/.mrtrc')
         if File.exist?(config_file) &&
           Hash === (cfg = YAML.load_file(config_file))
           cfg.each_pair { |k,v| config[k.to_sym] = v }

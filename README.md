@@ -34,10 +34,8 @@ rake install
 Usage
 -----
 
-After installation, you might be able to use the _mrT_ binary, right now it 
+After installation, you might be able to use the _mrt_ binary, right now it 
 takes an optional directory as only argument.
-
-     mrT
 
 MrT not only allows you to find files, if you hit the <code>TAB</code> key upon
 a selected file, MrT will present a set of actions to execute on it.
@@ -54,7 +52,7 @@ Use _Leader_ + _space_ to show available selectors.
 Configuration
 -------------
 
-A YAML file <code>~/.mrTrc</code> with a Hash content can be used for
+A YAML file <code>~/.mrtrc</code> with a Hash content can be used for
 configuration.
 
 Default values are:
