@@ -60,6 +60,10 @@ configuration.
 Default values are:
 
 <pre>
+# used to determine which files should be excluded from listings.
+# this is a list of glob patterns.
+ignore_patterns: []
+
 # if true and no directory is specified, mrT tries to guess git project root.
 find_git_root: true
 
@@ -96,4 +100,4 @@ Authors
 
 - [Victor Hugo Borja](http://github.com/vic) <vic.borja@gmail.com>
 
-- [Eduardo Lopez](http://github.com/tapichu)
+- [Eduardo Lopez](http://github.com/tapichu) <eduardo.biagi@gmail.com>

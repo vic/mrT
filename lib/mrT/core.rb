@@ -7,7 +7,8 @@ module MrT
     :max_files => 10_000,
     :scan_dot_directories => false,
     :show_dot_files => false,
-    :find_git_root => true
+    :find_git_root => true,
+    :ignore_patterns => []
   }
 
   class << self
