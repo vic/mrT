@@ -12,5 +12,14 @@ module MrT
       Kernel.exec 'git', 'diff', 'HEAD...'+action.target
     end
 
+    action :checkout, "Checkout this branch" do |ui, action|
+      if `git status --porcelain | wc -l`.chomp.to_i == 0
+        Kernel.exec 'git', 'checkout', action.target
+      else
+        system "echo 'Please, commit your changes or stash them before you can switch branches.'"
+        exit 0
+      end
+    end
+
   end
 end if MrT.git_root
