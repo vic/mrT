@@ -67,7 +67,11 @@ module MrT
           end
         when :tab
           action = action ui.dup
-          action && action.execute(ui.close) || ui.redraw
+          if action
+            return action.execute(ui.close)
+          else
+            ui.redraw
+          end
         when (0..255)
           pattern << c.chr
           filter ui
