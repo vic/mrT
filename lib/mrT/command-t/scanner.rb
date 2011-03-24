@@ -7,14 +7,11 @@ module CommandT
 
     class << self
       def patterns
-        unless @patterns
-          @patterns = if MrT.git_root && MrT.config[:use_git_ignore]
-                        `git ls-files --others --ignored --exclude-standard --full-name`.split("\n")
+        @patterns ||= if MrT.git_root && MrT.config[:use_git_ignore]
+                        `git ls-files --others --no-empty-directory --full-name`.split("\n")
                       else
                         MrT.config[:ignore_patterns]
                       end
-        end
-        @patterns
       end
 
       def flush_patterns
