@@ -9,6 +9,7 @@ module MrT
     :show_dot_files => false,
     :find_git_root => true,
     :use_git_ignore => true,
+    :patterns_in_git_repo => false,
     :ignore_patterns => []
   }
 
