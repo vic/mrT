@@ -7,18 +7,15 @@ module CommandT
 
     git_root = MrT.git_root
 
-    @@ignore_patterns = if git_root && !MrT.config[:patterns_in_git_repo]
-                          []
-                        else
-                          MrT.config[:ignore_patterns]
-                        end
+    @@ignore_patterns =
+      ([] if git_root && !MrT.config[:patterns_in_git_repo]) ||
+      MrT.config[:ignore_patterns]
 
-    @@ignored_files = if git_root && MrT.config[:use_git_ignore]
-                        # This should be a sorted list, so we can use a binary search.
-                        `git ls-files --others --no-empty-directory --full-name`.split("\n")
-                      else
-                        []
-                      end
+    @@ignored_files =
+      (git_root && MrT.config[:use_git_ignore] &&
+      # This should be a sorted list, so we can use a binary search.
+      `git ls-files --others --no-empty-directory --full-name`.split("\n")) ||
+      []
 
     def path_excluded? path
       # Strip common prefix (@path) from path
