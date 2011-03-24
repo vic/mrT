@@ -1,6 +1,8 @@
 Mr T
 ====
 
+![MrT](http://memegenerator.net/Mr-T/ImageMacro/6477443/I-pity-the-fool-who-doesnt-use-mrT)
+
 What is it.
 -----------
 
