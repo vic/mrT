@@ -1,7 +1,7 @@
 Mr T
 ====
 
-![MrT](http://memegenerator.net/Mr-T/ImageMacro/6477443/I-pity-the-fool-who-doesnt-use-mrT)
+![MrT](http://images2.memegenerator.net/ImageMacro/6477443/I-pity-the-fool-who-doesnt-use-mrT.jpg?imageSize=Medium&generatorName=Mr-T)
 
 What is it.
 -----------
