@@ -5,17 +5,31 @@ module CommandT
 
     private
 
-    def path_excluded? path
-      # Strip common prefix (@path) from path
-      path = path[(@prefix_len + 1)..-1]
-      MrT.config[:ignore_patterns].any? do |pattern|
-        File.fnmatch? pattern, path
+    class << self
+      def patterns
+        unless @patterns
+          @patterns = if MrT.git_root && MrT.config[:use_git_ignore]
+                        `git ls-files --others --ignored --exclude-standard --full-name`.split("\n")
+                      else
+                        MrT.config[:ignore_patterns]
+                      end
+        end
+        @patterns
+      end
+
+      def flush_patterns
+        @patterns = nil
       end
     end
 
-    # TODO: use gitignore if :use_git_ignore is true
-    # .gitignore, $GIT_DIR/info/exclude and core.excludesfile
-    # git ls-files --others --ignored --exclude-standard
+    # TODO: speed up this implementation, it's slow on big repos with many ignored files
+    def path_excluded? path
+      # Strip common prefix (@path) from path
+      path = path[(@prefix_len + 1)..-1]
+      Scanner.patterns.any? do |pattern|
+        File.fnmatch? pattern, path
+      end
+    end
 
   end
 end

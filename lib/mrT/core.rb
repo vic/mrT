@@ -8,6 +8,7 @@ module MrT
     :scan_dot_directories => false,
     :show_dot_files => false,
     :find_git_root => true,
+    :use_git_ignore => true,
     :ignore_patterns => []
   }
 

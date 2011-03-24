@@ -76,6 +76,9 @@ scan_dot_directories: false
 
 # should hidden files be shown?
 show_dot_files: false
+
+# if you're inside a Git repo, should Mr T ignore the same files as Git?
+use_git_ignore: true
 </pre>
 
 
