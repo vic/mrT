@@ -1,4 +1,5 @@
 require 'yaml'
+require 'ostruct'
 
 module MrT
 
@@ -8,7 +9,8 @@ module MrT
     :scan_dot_directories => false,
     :show_dot_files => false,
     :find_git_root => true,
-    :ignore_patterns => []
+    :ignore_patterns => [],
+    :selector => 't'
   }
 
   class << self
@@ -30,9 +32,38 @@ module MrT
       File.dirname(git_dir) if $? == 0
     end
 
-    def dir(default = Dir.pwd)
-      @dir ||=
-        (ARGV.first if ARGV.first && File.directory?(ARGV.first)) ||
+    def selector!
+      sel, argv = nil, cmd.argv
+      flag = argv.find { |a| a =~ /^-($|[^-])/ &&
+                         Selector.sources[a[1..-1]].tap { |s| sel = s } }
+      argv.delete(flag) if flag
+      cmd.selector = sel || Selector.sources[config[:selector]]
+    end
+
+    attr_reader :cmd
+
+    def cmd!(args = nil)
+      @cmd = OpenStruct.new
+      rest_argv! args
+      selector!
+      dir!
+      @cmd
+    end
+
+    def rest_argv!(argv)
+      idx = argv.index('--')
+      cmd.argv, cmd.rest = idx &&
+        [argv[0...idx], argv[idx+1..-1]] || [argv,[]]
+    end
+
+    def dir
+      cmd.dir
+    end
+
+    def dir!(default = Dir.pwd)
+      directory = cmd.argv.find { |a| File.directory? File.expand_path(a) }
+      cmd.dir ||=
+        (File.expand_path(directory) if directory) ||
         (git_root if MrT.config[:find_git_root]) ||
         default
     end
@@ -50,12 +81,14 @@ module MrT
       require f if File.file?(f)
     end
 
-    def run(source = 't')
+    def run
+      cmd! ARGV
       require_if_exists '~/.mrtrc.rb'
-      require_if_exists '.mrtrc.rb', dir if dir != File.expand_path('~')
+      require_if_exists '.mrtrc.rb', dir
+      selector = cmd.selector.new
+      exit 1 unless selector.has_items?
       ui = UI.new
-      src = Selector.sources[source].new
-      ui.with_curses { src.interact ui }
+      ui.with_curses { selector.interact ui }
     end
   end
 
