@@ -47,7 +47,14 @@ module MrT
       nil
     end
 
+    def require_if_exists(file, path = nil)
+      f = File.expand_path(file, path)
+      require f if File.file?(f)
+    end
+
     def run(source = 't')
+      require_if_exists '~/.mrtrc.rb'
+      require_if_exists '.mrtrc.rb', dir if dir != File.expand_path('~')
       ui = UI.new
       src = Selector.sources[source].new
       ui.with_curses { src.interact ui }

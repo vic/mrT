@@ -1,15 +1,17 @@
 Mr T
 ====
 
+![MrT](http://images2.memegenerator.net/ImageMacro/6477443/I-pity-the-fool-who-doesnt-use-mrT.jpg?imageSize=Medium&generatorName=Mr-T)
+
 What is it.
 -----------
 
 MrT is a curses based file finder. If you're familiar with Textmate's cmd-t,
-Vim's [Command-T](http://wincent.com/products/command-t) plugin, or Emacs's
+Vim's [Command-T](http://wincent.com/products/command-t) plugin, or Emacs'
 [Anything](http://www.emacswiki.org/emacs/Anything), you'll feel right at home. 
 
 MrT allows you to have fast, file completion from your shell prompt. You can 
-use it as-is by invoking the _mrT_ command, or use it as your default file
+use it as-is by invoking the _mrt_ command, or use it as your default file
 completion strategy for some unix commands.
 
 Requirements
@@ -20,7 +22,7 @@ It requires your ruby to have been compiled with the standard _curses_ and
 _readline_ libraries. If you are building your own ruby or are using _rvm_ 
 make sure you have needed development libraries before compiling ruby.
 
-We use the [Command-T gem](http://vic.github.com/Command-T/tree/gem), we 
+We use the [Command-T gem](http://github.com/vic/Command-T/tree/gem), we 
 expect our changes can be integrated into Command-T's main repo.
 
 
@@ -84,6 +86,14 @@ show_dot_files: false
 # if you're inside a Git repo, should Mr T ignore the same files as Git?
 use_git_ignore: true
 </pre>
+
+
+
+Customization
+-------------
+
+If a <code>.mrtrc.rb</code> file is found at your <code>$HOME</code> directory
+it will be automatically loaded. On a git repo you can place it at the root dir.
 
 
 Future

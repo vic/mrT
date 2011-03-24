@@ -92,7 +92,9 @@ module MrT
     attr_accessor :name, :desc, :guard, :action, :target
 
     def applies?
-      if guard
+      if guard.respond_to?(:call)
+        guard.call(target)
+      elsif guard
         guard === target
       else
         target
