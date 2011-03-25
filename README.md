@@ -79,11 +79,18 @@ max_depth: 15
 # max number of matches to display.
 max_files: 10_000
 
+# if you're inside a Git repo, should Mr T use your ignore patterns?
+# by default Mr T will only use gitignore
+patterns_in_git_repo: false
+
 # should hidden directories be scanned?
 scan_dot_directories: false
 
 # should hidden files be shown?
 show_dot_files: false
+
+# if you're inside a Git repo, should Mr T ignore the same files as Git?
+use_git_ignore: true
 </pre>
 
 
