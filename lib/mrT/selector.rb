@@ -81,7 +81,12 @@ module MrT
             return src.new.interact ui
           end
         when :tab
-          return action(ui.dup).execute(ui)
+          action = action ui.dup
+          if action
+            return action.execute(ui)
+          else
+            ui.redraw
+          end
         when (0..255)
           pattern << c.chr
           filter ui
