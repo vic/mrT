@@ -55,6 +55,16 @@ module MrT
       Kernel.exec 'emacs', action.target
     end if MrT.bin('emacs')
 
+    action :kwrite, "Open using KWrite" do |ui, action|
+      Kernel.spawn 'kwrite', action.target, :err=>'/dev/null'
+      exit 0
+    end if MrT.bin('kwrite')
+
+    action :kate, "Open using Kate" do |ui, action|
+      Kernel.spawn 'kate', action.target, :err=>'/dev/null'
+      exit 0
+    end if MrT.bin('kate')
+
     action :kfmclient, "Open with KDE file manager" do |ui, action|
       Kernel.exec 'kfmclient', 'openURL', action.target
     end if MrT.bin('kfmclient')
