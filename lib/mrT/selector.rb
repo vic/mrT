@@ -34,6 +34,8 @@ module MrT
     end
 
     def prepare
+      @actions = MrT.cmd.actions if MrT.cmd.actions
+      @pattern = MrT.cmd.pattern if MrT.cmd.pattern
       memoized_items
     end
 
@@ -57,6 +59,7 @@ module MrT
 
     def interact(ui)
       filter ui
+      return selected ui if ui.items.size < 2 && actions.empty?
       loop do
         ui.render_line 0, prompt, pattern.join
         ui.refresh
@@ -100,7 +103,7 @@ module MrT
     end
 
     def actions
-      self.class.actions
+      @actions ||= self.class.actions
     end
 
     def matching_actions(obj)

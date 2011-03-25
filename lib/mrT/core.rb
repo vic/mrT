@@ -49,11 +49,44 @@ module MrT
       rest_argv! args
       selector!
       dir!
+      actions_from_argv!
+      pattern_from_argv!
       @cmd
     end
 
+    def actions_from_argv(argv)
+      idx, actions, newArgv = -1, Array.new, Array.new
+      while arg = argv[idx += 1]
+        newArgv << arg
+        next unless arg =~ /^--[^-]/
+        newArgv.pop
+        name, desc = arg[2..-1].split(':', 2)
+        cmd = argv[idx + 1]
+        cmd = nil if cmd =~ /^--[^-]/
+        idx += 1 if cmd
+        action = cmd || "exec:#{name} %0"
+        actions << Action.with(name, desc, action)
+      end
+      [actions, newArgv]
+    end
+
+    def pattern_from_argv!
+      return unless idx = cmd.argv.index('--pattern')
+      cmd.pattern = cmd.argv.delete_at(idx+1).to_s.split(//)
+      cmd.argv.delete_at(idx)
+    end
+
+    def actions_from_argv!
+      from_idx = cmd.argv.rindex('--actions')
+      return unless from_idx
+      subary = cmd.argv[from_idx+1..-1]
+      remnant = subary.drop_while { |i| i != '--' }
+      cmd.actions, subary = actions_from_argv subary
+      cmd.argv = [cmd.argv[0...from_idx],subary,remnant[1..-1]].flatten.compact
+    end
+
     def rest_argv!(argv)
-      idx = argv.index('--')
+      idx = argv.rindex('--')
       cmd.argv, cmd.rest = idx &&
         [argv[0...idx], argv[idx+1..-1]] || [argv,[]]
     end
