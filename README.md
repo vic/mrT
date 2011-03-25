@@ -35,7 +35,7 @@ Installation
 You might want to add the *pity* alias to your <code>~/.bashrc</code> to easilly
 kill a fool process.
 
-    alias pity="ps -eopid,cmd | mrt - 3>&1 4>&1 1>&2 2>&3 | awk '{print\$1}' | xargs kill"
+    alias pity="ps -eopid,cmd | mrt - 3>&1 1>&2 2>&3 | awk '{print\$1}' | xargs kill"
 
 
 
@@ -113,5 +113,4 @@ Authors
 -------
 
 - [Victor Hugo Borja](http://github.com/vic) <vic.borja@gmail.com>
-
 - [Eduardo Lopez](http://github.com/tapichu) <eduardo.biagi@gmail.com>
