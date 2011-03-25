@@ -29,6 +29,15 @@ module MrT
       ">> "
     end
 
+    def memoized_items
+      @items ||= items
+    end
+
+    def has_items?
+      memoized_items
+      !(@items.nil? || @items.empty?)
+    end
+
     def items
       []
     end
@@ -39,7 +48,7 @@ module MrT
 
     def matcher(options = {})
       scanner = CommandT::Scanner.new
-      scanner.instance_variable_set :@paths, items
+      scanner.instance_variable_set :@paths, memoized_items
       CommandT::Matcher.new scanner, options
     end
 
@@ -66,12 +75,7 @@ module MrT
             return src.new.interact ui
           end
         when :tab
-          action = action ui.dup
-          if action
-            return action.execute(ui)
-          else
-            ui.redraw
-          end
+          return action(ui.dup).execute(ui)
         when (0..255)
           pattern << c.chr
           filter ui
@@ -84,7 +88,12 @@ module MrT
     end
 
     def action(ui)
-      self.class.matching_actions_selector(selected(ui)).interact(ui)
+      item = selected(ui)
+      if (actions = self.class.matching_actions(item)).empty?
+        Action.new.tap { |a| a.action = lambda { |u,a| item } }
+      else
+        ActionRegistry::ActionSelector.new(actions).interact(ui)
+      end
     end
   end
 
@@ -125,10 +134,6 @@ module MrT
 
     def matching_actions(obj)
       actions.map{ |c| c.new obj }.select(&:applies?)
-    end
-
-    def matching_actions_selector(obj)
-      ActionSelector.new matching_actions(obj)
     end
 
     class ActionSelector

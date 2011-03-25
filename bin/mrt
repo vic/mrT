@@ -9,5 +9,7 @@ gem 'command-t'
 
 require 'mrT'
 
+out = File.open(3, 'wb') rescue STDOUT
 res = MrT.run
-puts res if res
+out.puts res if res
+out.close
