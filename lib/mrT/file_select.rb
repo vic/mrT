@@ -3,7 +3,7 @@ require 'mrT/command-t/scanner'
 
 module MrT
   class FileSelect < Selector/'t'
-    def has_items?
+    def prepared?
       true
     end
 

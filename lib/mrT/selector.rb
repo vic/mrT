@@ -33,8 +33,11 @@ module MrT
       @items ||= items
     end
 
-    def has_items?
+    def prepare
       memoized_items
+    end
+
+    def prepared?
       !(@items.nil? || @items.empty?)
     end
 
@@ -89,11 +92,19 @@ module MrT
 
     def action(ui)
       item = selected(ui)
-      if (actions = self.class.matching_actions(item)).empty?
+      if (actions = matching_actions(item)).empty?
         Action.new.tap { |a| a.action = lambda { |u,a| item } }
       else
         ActionRegistry::ActionSelector.new(actions).interact(ui)
       end
+    end
+
+    def actions
+      self.class.actions
+    end
+
+    def matching_actions(obj)
+      actions.map{ |c| c.new obj }.select(&:applies?)
     end
   end
 
@@ -112,7 +123,38 @@ module MrT
 
     def execute(ui)
       ui.close
-      action.call(ui, self)
+      prc = String === action && Action.cmd_proc(action) || action
+      prc.call(ui, self)
+    end
+
+    def self.with(name, desc, action, guard = lambda { |n| true})
+      Class.new(self) do
+        define_method(:initialize) { |target|
+          @name, @desc, @action, @guard, @target = name, desc, action, guard, target
+        }
+      end
+    end
+
+    def self.cmd_proc(str)
+      lambda do |ui, action|
+        target = action.target
+        ary = [target, target.split].flatten.compact
+        pos = []
+        str, knd = str.split(':',2).reverse
+        knd = 'shell' unless %w(shell system exec spawn eval echo puts).include? knd
+        cmd = str.gsub(/(\\)?%(\d+)(:)?/) do |txt|
+          if $1
+            '%' + $2 + $3
+          else
+            pos << ary[$2.to_i]
+            $3 && '%' || '%s'
+          end
+        end
+        mth = {'shell' => 'system', 'echo' => 'puts'}[knd] || knd
+        Kernel.send(mth, cmd % pos).tap do
+          exit $?.exitstatus if knd =~ /spawn|shell|echo|puts/
+        end
+      end
     end
   end
 
@@ -123,17 +165,9 @@ module MrT
 
     def action(name, desc = nil, guard = lambda { |n| true }, &action)
       me = self
-      cls = Class.new(Action) do
-        define_method(:initialize) { |target|
-          @name, @desc, @guard, @action, @target = name, desc, guard, action, target
-        }
-        define_singleton_method(:inherited) { |sub| me.actions << sub }
-      end
+      cls = Action.with(name, desc, action, guard)
+      cls.define_singleton_method(:inherited) { |sub| me.actions << sub }
       action && Class.new(cls) || cls
-    end
-
-    def matching_actions(obj)
-      actions.map{ |c| c.new obj }.select(&:applies?)
     end
 
     class ActionSelector
@@ -144,11 +178,11 @@ module MrT
       end
 
       def items
-        @items ||= @actions.map { |a| "%-15s %-30s" % [a.name, a.desc] }
+        @actions.map { |a| "%-15s %-30s" % [a.name, a.desc] }
       end
 
       def selected(ui)
-        @actions[items.index(ui.selected)]
+        @actions[memoized_items.index(ui.selected)]
       end
 
       alias_method :action, :selected

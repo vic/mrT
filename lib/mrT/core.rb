@@ -86,7 +86,8 @@ module MrT
       require_if_exists '~/.mrtrc.rb'
       require_if_exists '.mrtrc.rb', dir
       selector = cmd.selector.new
-      exit 1 unless selector.has_items?
+      selector.prepare
+      exit 1 unless selector.prepared?
       ui = UI.new
       ui.with_curses { selector.interact ui }
     end
