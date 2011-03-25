@@ -111,5 +111,20 @@ module MrT
       gist.call(action.target, true)
     end if MrT.bin('curl')
 
+    action :chrome, "Open with Google Chrome" do |ui, action|
+      Kernel.spawn 'google-chrome', action.target, [:out,:err]=>'/dev/null'
+      exit 0
+    end if MrT.bin('google-chrome')
+
+    action :firefox, "Open with Firefox" do |ui, action|
+      Kernel.spawn 'firefox', action.target, [:out,:err]=>'/dev/null'
+      exit 0
+    end if MrT.bin('firefox')
+
+    action :konqueror, "Open with Konqueror" do |ui, action|
+      Kernel.spawn 'konqueror', action.target, [:out,:err]=>'/dev/null'
+      exit 0
+    end if MrT.bin('konqueror')
+
   end
 end
