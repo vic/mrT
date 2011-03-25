@@ -52,12 +52,12 @@ module MrT
     end if MrT.bin('emacs')
 
     action :kwrite, "Open using KWrite" do |ui, action|
-      Kernel.spawn 'kwrite', action.target
+      Kernel.spawn 'kwrite', action.target, :err=>'/dev/null'
       exit 0
     end if MrT.bin('kwrite')
 
     action :kate, "Open using Kate" do |ui, action|
-      Kernel.spawn 'kate', action.target
+      Kernel.spawn 'kate', action.target, :err=>'/dev/null'
       exit 0
     end if MrT.bin('kate')
 
