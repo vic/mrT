@@ -107,7 +107,7 @@ input.
 The following *sig* alias acts much like *pity* but uses named actions
 to provide a menu of which signal you want to send to the selected process.
 
-      alias sig="ps -eopid,cmd | mrt -
+      $ alias sig="ps -eopid,cmd | mrt - \
                  --SIGHUP:'Hangup [see termio(7)]' 'kill -s SIGHUP %1' \
                  --SIGINT:'Interrupt [see termio(7)]' 'kill -s SIGINT %1' \
                  --SIGQUIT:'Quit [see termio(7)]' 'kill -s SIGQUIT %1' \
