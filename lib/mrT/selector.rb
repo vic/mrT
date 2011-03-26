@@ -1,4 +1,4 @@
-require 'command-t/finder'
+require 'command-t/finder/file_finder'
 
 module MrT
   module Selector
@@ -52,7 +52,7 @@ module MrT
     end
 
     def matcher(options = {})
-      scanner = CommandT::Scanner.new
+      scanner = CommandT::FileScanner.new
       scanner.instance_variable_set :@paths, memoized_items
       CommandT::Matcher.new scanner, options
     end

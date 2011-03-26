@@ -1,7 +1,7 @@
-require 'command-t/scanner'
+require 'command-t/scanner/file_scanner'
 
 module CommandT
-  class Scanner
+  class FileScanner
 
     private
 

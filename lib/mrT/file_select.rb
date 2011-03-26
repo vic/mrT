@@ -1,4 +1,4 @@
-require 'command-t/finder'
+require 'command-t/finder/file_finder'
 require 'mrT/command-t/scanner'
 
 module MrT
@@ -8,7 +8,7 @@ module MrT
     end
 
     def matcher
-      @matcher ||= CommandT::Finder.new MrT.dir, cmd_t_options
+      @matcher ||= CommandT::FileFinder.new MrT.dir, cmd_t_options
     end
 
     def cmd_t_options
