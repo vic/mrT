@@ -42,6 +42,10 @@ module MrT
       Kernel.exec ENV['EDITOR'], action.target
     end if ENV['EDITOR']
 
+    action :pager, "Open using #{ENV['PAGER']}" do |ui, action|
+      Kernel.exec ENV['PAGER'], action.target
+    end if ENV['PAGER']
+
     action :vi, "Open using Vi" do |ui, action|
       Kernel.exec 'vi', action.target
     end if MrT.bin('vi')
