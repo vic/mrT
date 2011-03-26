@@ -24,9 +24,8 @@ module MrT
     end
 
     action "", "Custom shell command" do |ui, action|
-      cmd = ui.readline("echo "+action.target + " | xargs ")
-      system "echo '#{action.target}' | xargs #{cmd}"
-      exit 0
+      cmd = ui.readline("echo " + action.target + " | xargs ", true, false)
+      Kernel.exec "echo '#{action.target}' | xargs #{cmd}"
     end
 
     action :rm, "Delete file" do |ui, action|

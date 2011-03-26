@@ -91,7 +91,7 @@ module MrT
 
     def readline(prompt, cloze = true, reopen = true)
       close if cloze
-      Readline::readline(prompt, true)
+      Readline::readline(prompt, false)
     ensure
       if reopen
         open; redraw
