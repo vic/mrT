@@ -70,8 +70,8 @@ module CommandT
         unless @ignored_dirs
           ignored_dirs = []
           if git_root && MrT.config[:use_git_ignore]
-            ignored_dirs = `git ls-files --others --directory --full-name`.split("\n")
-            ignored_dirs.select! { |item| item.end_with? '/' }
+            files = `git ls-files --others --directory --full-name`.split("\n")
+            ignored_dirs = files.select { |item| item.end_with? '/' }
             ignored_dirs.map! { |item| item << '**' }
           end
           @ignored_dirs = ignored_dirs
