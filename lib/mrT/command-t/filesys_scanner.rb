@@ -18,6 +18,8 @@ module CommandT
       @max_depth            = options[:max_depth] || 15
       @max_files            = options[:max_files] || 10_000
       @scan_dot_directories = options[:scan_dot_directories] || false
+      @search_files         = if options[:files].nil? then true else options[:files] end
+      @search_directories   = options[:directories] || false
     end
 
     def paths
@@ -25,7 +27,7 @@ module CommandT
       begin
         @paths = []
         @depth = 0
-        @files = 0
+        @items = 0
         @prefix_len = @path.chomp('/').length
         add_paths_for_directory @path, @paths
       rescue FileLimitExceeded
@@ -46,21 +48,56 @@ module CommandT
 
     private
 
-    git_root = MrT.git_root
+    class << self
+      def git_root
+        @git_root ||= MrT.git_root
+      end
 
-    @@ignore_patterns =
-      ([] if git_root && !MrT.config[:patterns_in_git_repo]) ||
-      MrT.config[:ignore_patterns]
+      def ignore_patterns
+        @ignore_patterns ||=
+          ([] if git_root && !MrT.config[:patterns_in_git_repo]) ||
+          MrT.config[:ignore_patterns]
+      end
 
-    @@ignored_files =
-      (git_root && MrT.config[:use_git_ignore] &&
-      Hash[ `git ls-files --others --no-empty-directory --full-name`.split("\n").zip ]) ||
-      {}
+      def ignored_files
+        @ignored_files ||=
+          (git_root && MrT.config[:use_git_ignore] &&
+           Hash[ `git ls-files --others --no-empty-directory --full-name`.split("\n").zip ]) ||
+           {}
+      end
+
+      def ignored_dirs
+        unless @ignored_dirs
+          ignored_dirs = []
+          if git_root && MrT.config[:use_git_ignore]
+            ignored_dirs = `git ls-files --others --directory --full-name`.split("\n")
+            ignored_dirs.select! { |item| item.end_with? '/' }
+            ignored_dirs.map! { |item| item << '**' }
+          end
+          @ignored_dirs = ignored_dirs
+        end
+        @ignored_dirs
+      end
+    end
 
     def path_excluded? path
       # Strip common prefix (@path) from path
       path = path[(@prefix_len + 1)..-1]
-      @@ignored_files.key?(path) || @@ignore_patterns.any? { |p| File.fnmatch? p, path }
+
+      if @search_directories
+        FilesysScanner.ignored_files.key?(path) ||
+          FilesysScanner.ignored_dirs.any? { |d| File.fnmatch? d, path } ||
+          FilesysScanner.ignore_patterns.any? { |p| File.fnmatch? p, path }
+      else
+        FilesysScanner.ignored_files.key?(path) ||
+          FilesysScanner.ignore_patterns.any? { |p| File.fnmatch? p, path }
+      end
+    end
+
+    def add_path path, accumulator
+      @items += 1
+      raise FileLimitExceeded if @items > @max_files
+      accumulator << path[@prefix_len + 1..-1]
     end
 
     def add_paths_for_directory dir, accumulator
@@ -69,12 +106,15 @@ module CommandT
         path = File.join(dir, entry)
         unless path_excluded? path
           if File.file? path
-            @files += 1
-            raise FileLimitExceeded if @files > @max_files
-            accumulator << path[@prefix_len + 1..-1]
+            if @search_files
+              add_path path, accumulator
+            end
           elsif File.directory? path
             next if @depth >= @max_depth
             next if (entry.match(/\A\./) && !@scan_dot_directories)
+            if @search_directories
+              add_path path << '/', accumulator
+            end
             @depth += 1
             add_paths_for_directory path, accumulator
             @depth -= 1
