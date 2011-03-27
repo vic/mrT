@@ -11,7 +11,7 @@ module CommandT
   #  * Glob patterns
   #  * Git aware (gitignore)
   class FilesysFinder < Finder
-    def initialize path = Dir.pwd, options = {}
+    def initialize(path = Dir.pwd, options = {})
       @scanner = FilesysScanner.new path, options
       options[:never_show_dot_files] =
           !(options[:always_show_dot_files] = !!options.delete(:show_dot_files))

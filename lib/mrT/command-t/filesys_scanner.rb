@@ -13,7 +13,7 @@ module CommandT
   class FilesysScanner < Scanner
     class FileLimitExceeded < ::RuntimeError; end
 
-    def initialize path = Dir.pwd, options = {}
+    def initialize(path = Dir.pwd, options = {})
       @path                 = path
       @max_depth            = options[:max_depth] || 15
       @max_files            = options[:max_files] || 10_000
@@ -39,7 +39,7 @@ module CommandT
       @paths = nil
     end
 
-    def path= str
+    def path=(str)
       if @path != str
         @path = str
         flush
@@ -80,7 +80,7 @@ module CommandT
       end
     end
 
-    def path_excluded? path
+    def path_excluded?(path)
       # Strip common prefix (@path) from path
       path = path[(@prefix_len + 1)..-1]
 
@@ -94,13 +94,13 @@ module CommandT
       end
     end
 
-    def add_path path, accumulator
+    def add_path(path, accumulator)
       @items += 1
       raise FileLimitExceeded if @items > @max_files
       accumulator << path[@prefix_len + 1..-1]
     end
 
-    def add_paths_for_directory dir, accumulator
+    def add_paths_for_directory(dir, accumulator)
       Dir.foreach(dir) do |entry|
         next if ['.', '..'].include? entry
         path = File.join(dir, entry)
