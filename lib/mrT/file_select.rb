@@ -1,5 +1,4 @@
-require 'command-t/finder/file_finder'
-require 'mrT/command-t/scanner'
+require 'mrT/command-t/filesys_finder'
 
 module MrT
   class FileSelect < Selector/'t'
@@ -8,15 +7,12 @@ module MrT
     end
 
     def matcher
-      @matcher ||= CommandT::FileFinder.new MrT.dir, cmd_t_options
+      @matcher ||= CommandT::FilesysFinder.new MrT.dir, cmd_t_options
     end
 
     def cmd_t_options
       keys = [:max_depth, :max_files, :scan_dot_directories, :show_dot_files]
-      opts = Hash[keys.zip(MrT.config.values_at(*keys))]
-      opts[:never_show_dot_files] =
-          !(opts[:always_show_dot_files] = !!opts.delete(:show_dot_files))
-      opts
+      Hash[keys.zip(MrT.config.values_at(*keys))]
     end
 
     def selected(ui)
