@@ -31,7 +31,8 @@ module MrT
     end
 
     action :cd, "Shell into containing directory" do |ui, action|
-      Kernel.exec ENV['SHELL'], File.dirname(action.target)
+      Dir.chdir File.dirname(action.target)
+      Kernel.exec ENV['SHELL']
     end
 
     action :edit, "Open using #{ENV['EDITOR']}" do |ui, action|
