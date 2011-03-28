@@ -52,5 +52,9 @@ module MrT
     action :dolphin, "Open directory with KDE Dolphin" do |ui, action|
       Kernel.exec 'dolphin', action.target
     end
+
+    action :konsole, "Open directory with KDE Konsole" do |ui, action|
+      Kernel.exec 'konsole', '--workdir', action.target
+    end
   end
 end
