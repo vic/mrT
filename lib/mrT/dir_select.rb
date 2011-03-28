@@ -61,5 +61,20 @@ module MrT
       remote = ui.readline('scp -r ' + action.target + ' ', false, false)
       Kernel.exec 'scp', '-r', action.target, remote
     end if MrT.bin('scp')
+
+    action :tar, "Create a tarball of the directory" do |ui, action|
+      name = ui.readline('Name: ', false, false)
+      Kernel.exec 'tar', '-cf', name, ui.selected
+    end if MrT.bin('tar')
+
+    action :targz, "Create a gzipped tarball of the directory" do |ui, action|
+      name = ui.readline('Name: ', false, false)
+      Kernel.exec 'tar', '-czf', name, ui.selected
+    end if MrT.bin('tar')
+
+    action :zip, "Crate a zip archive of the directory" do |ui, action|
+      name = ui.readline('Name: ', false, false)
+      Kernel.exec 'zip', '-r', name, ui.selected
+    end if MrT.bin('zip')
   end
 end
