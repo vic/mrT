@@ -47,14 +47,19 @@ module MrT
 
     action :kfmclient, "Open directory with KDE file manager" do |ui, action|
       Kernel.exec 'kfmclient', 'openURL', action.target
-    end
+    end if MrT.bin('kfmclient')
 
     action :dolphin, "Open directory with KDE Dolphin" do |ui, action|
       Kernel.exec 'dolphin', action.target
-    end
+    end if MrT.bin('dolphin')
 
     action :konsole, "Open directory with KDE Konsole" do |ui, action|
       Kernel.exec 'konsole', '--workdir', action.target
-    end
+    end if MrT.bin('konsole')
+
+    action :scp, "Secure shell copy to .." do |ui, action|
+      remote = ui.readline('scp -r ' + action.target + ' ', false, false)
+      Kernel.exec 'scp', '-r', action.target, remote
+    end if MrT.bin('scp')
   end
 end
