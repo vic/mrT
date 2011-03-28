@@ -44,5 +44,13 @@ module MrT
       FileUtils.rm_rf action.target
       exit 0
     end
+
+    action :kfmclient, "Open directory with KDE file manager" do |ui, action|
+      Kernel.exec 'kfmclient', 'openURL', action.target
+    end
+
+    action :dolphin, "Open directory with KDE Dolphin" do |ui, action|
+      Kernel.exec 'dolphin', action.target
+    end
   end
 end
