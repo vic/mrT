@@ -17,9 +17,9 @@ module CommandT
       @path                 = path
       @max_depth            = options[:max_depth] || 15
       @max_files            = options[:max_files] || 10_000
-      @scan_dot_directories = options[:scan_dot_directories] || false
-      @search_files         = if options[:files].nil? then true else options[:files] end
-      @search_directories   = options[:directories] || false
+      @scan_dot_directories = !!options[:scan_dot_directories]
+      @search_files         = options[:files].nil? || !!options[:files]
+      @search_directories   = !!options[:directories]
     end
 
     def paths
