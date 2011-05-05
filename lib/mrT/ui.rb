@@ -12,7 +12,8 @@ module MrT
       27 => :escape,
       92 => :backslash,
       Curses::KEY_ENTER => :enter,
-      Curses::KEY_BACKSPACE => :backspace
+      Curses::KEY_BACKSPACE => :backspace,
+      127 => :backspace
     }
 
     def show(items, selected = 0)
