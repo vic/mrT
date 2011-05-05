@@ -1,5 +1,3 @@
-require 'command-t/scanner'
-
 module CommandT
   # File system scanner. It can search recursively for:
   #  * Files
@@ -10,7 +8,7 @@ module CommandT
   #  * Git aware (gitignore)
   #
   #  Based on CommandT::FileFinder
-  class FilesysScanner < Scanner
+  class FilesysScanner
     class FileLimitExceeded < ::RuntimeError; end
 
     def initialize(path = Dir.pwd, options = {})
